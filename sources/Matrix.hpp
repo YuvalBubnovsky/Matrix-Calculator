@@ -18,10 +18,10 @@ namespace zich
 
     public:
         // Constructors
-        Matrix(const vector<double> mat, size_t rows, size_t columns);
-        Matrix(const vector<vector<double>> mat, size_t rows, size_t columns);
-        Matrix(const vector<double> mat, int rows, int columns);
-        Matrix(const vector <vector<double>>mat, int rows, int columns);
+       // Matrix(const vector<double> &mat, size_t rows, size_t columns);
+     //   Matrix(const vector<vector<double>> &mat, size_t rows, size_t columns);
+        Matrix(vector<double> mat, int rows, int columns);
+        Matrix(vector <vector<double>> mat, int rows, int columns);
         Matrix(const Matrix &mat);
         Matrix(int rows, int columns);
         Matrix();
@@ -32,7 +32,7 @@ namespace zich
         // Friend functions
         friend ostream &operator<<(ostream &out, const Matrix &mat);
         friend void operator>>(istream &in, const Matrix &mat);
-        friend Matrix operator*(double num, const Matrix mat);
+        friend Matrix operator*(double num, const Matrix &mat);
 
         // Matrix with Matrix operations
         Matrix &operator+(const Matrix &mat) const;
@@ -65,6 +65,6 @@ namespace zich
         Matrix &operator--();           //--matrix
 
         // Helpers
-        bool inline dim_check(const Matrix &mat) const;
+        bool dim_check(const Matrix &mat) const;
     };
 };

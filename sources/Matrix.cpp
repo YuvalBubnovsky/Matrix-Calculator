@@ -18,7 +18,7 @@ namespace zich
     {
     }
 
-    Matrix operator*(double num, Matrix mat)
+    Matrix operator*(double num, const Matrix &mat)
     {
         return mat;
     }
@@ -26,58 +26,42 @@ namespace zich
     bool Matrix::dim_check(const Matrix &mat) const
     {
         bool status = false;
-        if (this->rows != mat.rows || this->columns != mat.columns)
+        if (rows == mat.rows && columns == mat.columns)
         {
-            return status;
+            return !status;
         }
-        return !status;
+        return status;
     }
     // If we get dimension in int, cast to size_t
-    Matrix::Matrix(const vector<double> mat, int rows, int columns) : rows{static_cast<size_t>(rows)}, columns{static_cast<size_t>(columns)}
+    Matrix::Matrix(vector<double> mat, int rows, int columns) : rows{static_cast<size_t>(rows)}, columns{static_cast<size_t>(columns)}
     {
-        if (rows < 0 || columns < 0)
+        if (rows <= 0 || columns <= 0)
         {
             throw "Invalid Arguments!";
         }
-        Matrix(move(mat), static_cast<size_t>(rows), static_cast<size_t>(columns));
-    }
-    Matrix::Matrix(const vector<double> mat, size_t rows, size_t columns) : rows{rows}, columns{columns}
-    {
         if (mat.size() != rows * columns)
         {
-            throw "Invalid Dimensions!";
+            throw "Invalid Arguments!";
         }
 
         vector<vector<double>> matr(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
-        for (size_t i = 0; i < rows; i++)
+        for (size_t i = 0; i < rows * columns; i++)
         {
-            for (size_t j = 0; j < columns; j++)
-            {
-                matr.at(i).at(j) = mat.at((i * static_cast<size_t>(rows) + j));
-            }
-        }
+            matr.at(i / static_cast<size_t>(columns)).at(i % static_cast<size_t>(columns)) = mat.at(i);
 
-        this->matrix = matr;
-        this->rows = static_cast<size_t>(rows);
-        this->columns = static_cast<size_t>(columns);
+            this->matrix = matr;
+            this->rows = static_cast<size_t>(rows);
+            this->columns = static_cast<size_t>(columns);
+        }
     }
 
     // If we get dimension in int, cast to size_t
-    Matrix::Matrix(const vector<vector<double>> mat, int rows, int columns)
+    Matrix::Matrix(vector<vector<double>> mat, int rows, int columns) : rows{static_cast<size_t>(rows)}, columns{static_cast<size_t>(columns)}
     {
 
-        if (rows < 0 || columns < 0)
+        if (rows <= 0 || columns <= 0)
         {
             throw "Invalid Arguments!";
-        }
-        Matrix(move(mat), static_cast<size_t>(rows), static_cast<size_t>(columns));
-    }
-
-    Matrix::Matrix(const vector<vector<double>> mat, size_t rows, size_t columns) : rows{rows}, columns{columns}
-    {
-        if (mat.size() != rows * columns)
-        {
-            throw "Invalid Dimensions!";
         }
 
         vector<vector<double>> matr(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
@@ -96,7 +80,7 @@ namespace zich
 
     Matrix::Matrix(int rows, int columns)
     {
-        if (rows < 0 || columns < 0)
+        if (rows <= 0 || columns <= 0)
         {
             throw "Invalid Arguments!";
         }
@@ -142,7 +126,7 @@ namespace zich
                 values.at(i).at(j) = vector1.at(i).at(j) + vector2.at(i).at(j);
             }
         }
-        Matrix *resault = new Matrix(values, rows, columns);
+        Matrix *resault = new Matrix(values, (int)rows, (int)columns);
         return *resault;
     }
 
@@ -165,7 +149,7 @@ namespace zich
                 values.at(i).at(j) = vector1.at(i).at(j) - vector2.at(i).at(j);
             }
         }
-        Matrix *resault = new Matrix(values, rows, columns);
+        Matrix *resault = new Matrix(values, (int)rows, (int)columns);
         return *resault;
     }
 
@@ -178,26 +162,23 @@ namespace zich
         // Standard matrix multiplication algorith, done in O(n^3) to avoid implementing Strassen multiplication algorithm
 
         double running_sum = 0; // needed for calculations in matrix multiplication
-        const vector<vector<double>> &vector1 = mat.matrix;
-        const vector<vector<double>> &vector2 = this->matrix;
-        size_t rows = mat.rows;
-        size_t columns = mat.columns;
-        vector<vector<double>> values(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
-        for (size_t i = 0; i < rows; i++)
+        vector<vector<double>> values;
+        for (size_t i = 0; i < this->rows; i++)
         {
-            for (size_t j = 0; j < columns; j++)
+            values.emplace_back(vector<double>(mat.columns, 0));
+            for (size_t j = 0; j < mat.columns; j++)
             {
                 running_sum = 0;
 
-                for (size_t k = 0; k < columns; k++)
+                for (size_t k = 0; k < mat.rows; k++)
                 {
-                    running_sum += vector1.at(i).at(k) * vector2.at(k).at(i);
+                    running_sum += this->matrix.at(i).at(k) * mat.matrix.at(k).at(j);
                 }
 
                 values.at(i).at(j) = running_sum;
             }
         }
-        Matrix *resault = new Matrix(values, rows, columns);
+        Matrix *resault = new Matrix(values, (int)this->rows, (int)mat.columns);
         return *resault;
     }
 
@@ -224,9 +205,9 @@ namespace zich
 
     Matrix &Matrix::operator*=(const Matrix &mat)
     {
-        if (!dim_check(mat))
+        if (this->columns != mat.rows)
         {
-            throw "Invalid Dimensions!";
+            throw "Multiplication Not Defined For These Dimension";
         }
 
         *this = *this * mat;
@@ -247,7 +228,7 @@ namespace zich
                 end_vect.at(i).at(j) = temp_vect.at(i).at(j) * scalar;
             }
         }
-        Matrix *resault = new Matrix(end_vect, row, col);
+        Matrix *resault = new Matrix(end_vect, (int)row, (int)col);
         return *resault;
     }
 
@@ -312,7 +293,7 @@ namespace zich
         {
             throw "Invalid Dimensions!";
         }
-    
+
         return flag;
     }
 
