@@ -18,55 +18,53 @@ namespace zich
 
     public:
         // Constructors
-        Matrix(vector<double> mat, size_t rows, size_t columns);
-        Matrix(vector<double> mat, int rows, int columns);
+        Matrix(const vector<double> mat, size_t rows, size_t columns);
+        Matrix(const vector<vector<double>> mat, size_t rows, size_t columns);
+        Matrix(const vector<double> mat, int rows, int columns);
+        Matrix(const vector <vector<double>>mat, int rows, int columns);
         Matrix(const Matrix &mat);
         Matrix(int rows, int columns);
+        Matrix();
 
         // Destructor
         ~Matrix();
 
-        // Global Operators
-        friend istream &operator>>(istream &in, const Matrix &mat);
+        // Friend functions
         friend ostream &operator<<(ostream &out, const Matrix &mat);
+        friend void operator>>(istream &in, const Matrix &mat);
+        friend Matrix operator*(double num, const Matrix mat);
 
-        // Comparison Operators
-        friend bool operator>(const Matrix &mat1, const Matrix &mat2);
-        friend bool operator>=(const Matrix &mat1, const Matrix &mat2);
+        // Matrix with Matrix operations
+        Matrix &operator+(const Matrix &mat) const;
+        Matrix &operator-(const Matrix &mat) const;
+        Matrix &operator*(const Matrix &mat) const;
+        Matrix &operator+=(const Matrix &mat);
+        Matrix &operator-=(const Matrix &mat);
+        Matrix &operator*=(const Matrix &mat);
 
-        friend bool operator<(const Matrix &mat1, const Matrix &mat2);
-        friend bool operator<=(const Matrix &mat1, const Matrix &mat2);
+        // Matrix with scalars
+        Matrix &operator*(const double &scalar);
+        Matrix &operator*=(const double &scalar);
 
-        friend bool operator==(const Matrix &mat1, const Matrix &mat2);
-        friend bool operator!=(const Matrix &mat1, const Matrix &mat2);
+        // Matrix comparisons
+        bool &operator<(const Matrix &mat) const;
+        bool &operator<=(const Matrix &mat) const;
+        bool &operator>(const Matrix &mat) const;
+        bool &operator>=(const Matrix &mat) const;
+        bool &operator==(const Matrix &mat) const;
+        bool &operator!=(const Matrix &mat) const;
 
-        // Single Matrix Operators
-        friend Matrix operator+(const Matrix &mat, double number);
-        friend Matrix operator+(double number, const Matrix &mat);
-        friend Matrix operator+(const Matrix &mat);
-        friend void operator+=(Matrix &mat, double number);
+        // Matrix Unary Operators
+        Matrix &operator+();
+        Matrix &operator-();
 
-        friend Matrix operator-(const Matrix &mat, double number);
-        friend Matrix operator-(double number, const Matrix &mat);
-        friend Matrix operator-(const Matrix &mat);
-        friend void operator-=(Matrix &mat, double number);
+        // Matrix Increment
+        Matrix &operator++(int num);    //matrix++
+        Matrix &operator++();           //++matrix
+        Matrix &operator--(int num);    //matrix--
+        Matrix &operator--();           //--matrix
 
-        friend Matrix operator*(double number, const Matrix &mat);
-        friend Matrix operator*(const Matrix &mat, double number);
-        friend void operator*=(Matrix &mat, double number);
-
-        friend void operator++(Matrix &mat);
-        friend void operator--(Matrix &mat);
-
-        // Double Matrix Operators
-        friend Matrix operator+(const Matrix &mat1, const Matrix &mat2);
-        friend void operator+=(Matrix &mat1, const Matrix &mat2);
-
-        friend Matrix operator-(const Matrix &mat1, const Matrix &mat2);
-        friend void operator-=(Matrix &mat1, const Matrix &mat2);
-
-        friend Matrix operator*(const Matrix &mat1, const Matrix &mat2);
-        friend void operator*=(Matrix &mat1, const Matrix &mat2);
-
+        // Helpers
+        bool inline dim_check(const Matrix &mat) const;
     };
 };
