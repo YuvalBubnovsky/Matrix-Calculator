@@ -31,20 +31,20 @@ namespace zich
 
         // Friend functions
         friend ostream &operator<<(ostream &out, const Matrix &mat);
-        friend void operator>>(istream &in, const Matrix &mat);
+        friend istream &operator>>(istream &in, Matrix &mat);
         friend Matrix operator*(double scalar, const Matrix &mat);
 
         // Matrix with Matrix operations
-        Matrix &operator+(const Matrix &mat) const;
-        Matrix &operator-(const Matrix &mat) const;
-        Matrix &operator*(const Matrix &mat) const;
-        Matrix &operator+=(const Matrix &mat);
-        Matrix &operator-=(const Matrix &mat);
-        Matrix &operator*=(const Matrix &mat);
+        Matrix operator+(const Matrix &mat) const;
+        Matrix operator-(const Matrix &mat) const;
+        Matrix operator*(const Matrix &mat) const;
+        Matrix operator+=(const Matrix &mat);
+        Matrix operator-=(const Matrix &mat);
+        Matrix operator*=(const Matrix &mat);
 
         // Matrix with scalars
-        Matrix &operator*(const double &scalar);
-        Matrix &operator*=(const double &scalar);
+        Matrix operator*(const double &scalar);
+        Matrix operator*=(const double &scalar);
 
         // Matrix comparisons
         bool operator<(const Matrix &mat) const;
@@ -55,8 +55,8 @@ namespace zich
         bool operator!=(const Matrix &mat) const;
 
         // Matrix Unary Operators
-        Matrix &operator+();
-        Matrix &operator-();
+        Matrix operator+();
+        Matrix operator-();
 
         // Matrix Increment
         Matrix operator++(int num);    //matrix++

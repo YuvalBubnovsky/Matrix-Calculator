@@ -30,12 +30,13 @@ namespace zich
                     temp += " ";
                 }
                 sub_string = std::to_string(mat.matrix.at(i).at(j));
-                index = sub_string.find('.',0);
-                sub_string = sub_string.substr(0,index);
+                index = sub_string.find('.', 0);
+                sub_string = sub_string.substr(0, index);
                 temp += sub_string;
             }
             temp += "]";
-            if (i < rows-1){
+            if (i < rows - 1)
+            {
                 temp += "\n";
             }
             ans += temp;
@@ -44,13 +45,49 @@ namespace zich
         return out;
     }
 
-    void operator>>(istream &in, const Matrix &mat)
+    istream &operator>>(istream &in, Matrix &mat)
     {
+        string input_mat;
+        getline(in, input_mat);
+        string delimiter_2 = ", ";
+        size_t pos = 0;
+        vector<string> tokens;
+
+        while ((pos = input_mat.find(delimiter_2)) != string::npos)
+        {
+            tokens.push_back(input_mat.substr(0, pos));
+            input_mat.erase(0, pos + 2);
+        }
+        tokens.push_back(input_mat.substr(0, input_mat.size()));
+
+        size_t row = tokens.size();
+        vector<double> mat_vector;
+        for (size_t i = 0; i < row; i++)
+        {
+            tokens.at(i).erase(0, 1);
+            tokens.at(i).erase(tokens.at(i).size() - 1, 1);
+            tokens.at(i).append(" ");
+        }
+        for (size_t i = 0; i < row; i++)
+        {
+            while ((pos = tokens.at(i).find(' ')) != string::npos)
+            {
+                mat_vector.push_back(stod(tokens.at(i).substr(0, pos)));
+                tokens.at(i).erase(0, pos + 1);
+            }
+        }
+        if (row == 0)
+        {
+            throw "Invalid Input!";
+        }
+        size_t col = (mat_vector.size()) / row;
+        mat = Matrix(mat_vector, row, col);
+        return in;
     }
 
     Matrix operator*(double scalar, const Matrix &mat)
     {
-         const vector<vector<double>> &temp_vect = mat.matrix;
+        const vector<vector<double>> &temp_vect = mat.matrix;
         size_t rows = mat.rows;
         size_t columns = mat.columns;
 
@@ -62,8 +99,7 @@ namespace zich
                 end_vect.at(i).at(j) = temp_vect.at(i).at(j) * scalar;
             }
         }
-        Matrix *resault = new Matrix(end_vect, rows, columns);
-        return *resault;
+        return Matrix(end_vect, rows, columns);
     }
 
     bool Matrix::dim_check(const Matrix &mat) const
@@ -88,6 +124,7 @@ namespace zich
         }
         return res;
     }
+
     // If we get dimension in int, cast to size_t
     Matrix::Matrix(vector<double> mat, int rows, int columns)
     {
@@ -162,7 +199,7 @@ namespace zich
         this->matrix.clear();
     }
 
-    Matrix &Matrix::operator+(const Matrix &mat) const
+    Matrix Matrix::operator+(const Matrix &mat) const
     {
         if (!dim_check(mat))
         {
@@ -180,11 +217,10 @@ namespace zich
                 values.at(i).at(j) = vector1.at(i).at(j) + vector2.at(i).at(j);
             }
         }
-        Matrix *resault = new Matrix(values, rows, columns);
-        return *resault;
+        return Matrix(values, rows, columns);
     }
 
-    Matrix &Matrix::operator-(const Matrix &mat) const
+    Matrix Matrix::operator-(const Matrix &mat) const
     {
         if (!dim_check(mat))
         {
@@ -201,11 +237,10 @@ namespace zich
                 values.at(i).at(j) = vector2.at(i).at(j) - vector1.at(i).at(j);
             }
         }
-        Matrix *resault = new Matrix(values, (int)rows, (int)columns);
-        return *resault;
+        return Matrix(values, rows, columns);
     }
 
-    Matrix &Matrix::operator*(const Matrix &mat) const
+    Matrix Matrix::operator*(const Matrix &mat) const
     {
         if (this->columns != mat.rows)
         {
@@ -230,11 +265,10 @@ namespace zich
                 values.at(i).at(j) = running_sum;
             }
         }
-        Matrix *resault = new Matrix(values, (int)this->rows, (int)mat.columns);
-        return *resault;
+        return Matrix(values, this->rows, mat.columns);
     }
 
-    Matrix &Matrix::operator+=(const Matrix &mat)
+    Matrix Matrix::operator+=(const Matrix &mat)
     {
         if (!dim_check(mat))
         {
@@ -245,7 +279,7 @@ namespace zich
         return *this;
     }
 
-    Matrix &Matrix::operator-=(const Matrix &mat)
+    Matrix Matrix::operator-=(const Matrix &mat)
     {
         if (!dim_check(mat))
         {
@@ -255,7 +289,7 @@ namespace zich
         return *this;
     }
 
-    Matrix &Matrix::operator*=(const Matrix &mat)
+    Matrix Matrix::operator*=(const Matrix &mat)
     {
         if (this->columns != mat.rows)
         {
@@ -266,7 +300,7 @@ namespace zich
         return *this;
     }
 
-    Matrix &Matrix::operator*(const double &scalar)
+    Matrix Matrix::operator*(const double &scalar)
     {
         const vector<vector<double>> &temp_vect = this->matrix;
 
@@ -278,11 +312,10 @@ namespace zich
                 end_vect.at(i).at(j) = temp_vect.at(i).at(j) * scalar;
             }
         }
-        Matrix *resault = new Matrix(end_vect, rows, columns);
-        return *resault;
+        return Matrix(end_vect, rows, columns);
     }
 
-    Matrix &Matrix::operator*=(const double &scalar)
+    Matrix Matrix::operator*=(const double &scalar)
     {
         *this = *this * scalar;
         return *this;
@@ -306,7 +339,7 @@ namespace zich
             throw "Invalid Dimensions!";
         }
 
-        return !((*this)>mat);
+        return !((*this) > mat);
     }
 
     bool Matrix::operator>(const Matrix &mat) const
@@ -356,16 +389,14 @@ namespace zich
         return !((*this) == mat);
     }
 
-    Matrix &Matrix::operator+()
+    Matrix Matrix::operator+()
     {
-        Matrix *resault = new Matrix(*this);
-        return *resault;
+        return Matrix(*this);
     }
 
-    Matrix &Matrix::operator-()
+    Matrix Matrix::operator-()
     {
-        Matrix *resault = new Matrix((*this) * -1);
-        return *resault;
+        return Matrix((*this) * -1);
     }
 
     Matrix Matrix::operator++(int num)
