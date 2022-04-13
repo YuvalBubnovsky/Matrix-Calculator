@@ -18,8 +18,6 @@ namespace zich
 
     public:
         // Constructors
-       // Matrix(const vector<double> &mat, size_t rows, size_t columns);
-     //   Matrix(const vector<vector<double>> &mat, size_t rows, size_t columns);
         Matrix(vector<double> mat, int rows, int columns);
         Matrix(vector <vector<double>> mat, int rows, int columns);
         Matrix(const Matrix &mat);
@@ -59,10 +57,10 @@ namespace zich
         Matrix operator-();
 
         // Matrix Increment
-        Matrix operator++(int num);    //matrix++
-        Matrix& operator++();           //++matrix
-        Matrix operator--(int num);    //matrix--
-        Matrix& operator--();           //--matrix
+        Matrix operator++(int num);    
+        Matrix& operator++();           
+        Matrix operator--(int num);    
+        Matrix& operator--();           
 
         // Helpers
         bool dim_check(const Matrix &mat) const;
