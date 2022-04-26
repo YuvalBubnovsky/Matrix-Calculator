@@ -16,6 +16,9 @@ OBJECTS=$(subst sources/,objects/,$(subst .cpp,.o,$(SOURCES)))
 
 run: test
 
+main: Main.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $^ -o Main
+
 test: TestRunner.o StudentTest1.o StudentTest2.o StudentTest3.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
@@ -24,6 +27,9 @@ test: TestRunner.o StudentTest1.o StudentTest2.o StudentTest3.o $(OBJECTS)
 
 $(OBJECT_PATH)/%.o: $(SOURCE_PATH)/%.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) --compile $< -o $@
+
+Main.cpp:
+	
 
 StudentTest1.cpp:  # Itzik
 	curl https://raw.githubusercontent.com/itzikbs1/Ex3_A_Cpp/master/Test.cpp > $@
@@ -34,6 +40,7 @@ StudentTest2.cpp:  # Itamar Almog
 StudentTest3.cpp:  # Amit Melamed
 	curl https://raw.githubusercontent.com/amitmelamed/-matrix-calculator-a/main/Test.cpp > $@
 
+
 tidy:
 	clang-tidy $(SOURCES) $(TIDY_FLAGS) --
 
@@ -43,3 +50,4 @@ valgrind: test
 clean:
 	rm -f $(OBJECTS) *.o test* 
 	rm -f StudentTest*.cpp
+	rm Main

@@ -8,6 +8,81 @@ namespace zich
 {
     bool flag = true;
 
+        Matrix::Matrix(vector<double> mat, int rows, int columns)
+    {
+        if (rows <= 0 || columns <= 0)
+        {
+            throw "Invalid Arguments!";
+        }
+        if (mat.size() != rows * columns)
+        {
+            throw "Invalid Arguments!";
+        }
+
+        vector<vector<double>> matr(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
+        for (size_t i = 0; i < rows * columns; i++)
+        {
+            // division and modulo manipulation to avoid doing nested loops
+            matr.at(i / static_cast<size_t>(columns)).at(i % static_cast<size_t>(columns)) = mat.at(i);
+
+            this->matrix = matr;
+            this->rows = static_cast<size_t>(rows);
+            this->columns = static_cast<size_t>(columns);
+        }
+    }
+
+    Matrix::Matrix(vector<vector<double>> mat, int rows, int columns)
+    {
+
+        if (rows <= 0 || columns <= 0)
+        {
+            throw "Invalid Arguments!";
+        }
+
+        vector<vector<double>> matr(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
+        for (size_t i = 0; i < rows; i++)
+        {
+            for (size_t j = 0; j < columns; j++)
+            {
+                matr.at(i).at(j) = mat.at(i).at(j);
+            }
+        }
+
+        this->matrix = matr;
+        this->rows = static_cast<size_t>(rows);
+        this->columns = static_cast<size_t>(columns);
+    }
+
+    Matrix::Matrix(int rows, int columns)
+    {
+        if (rows <= 0 || columns <= 0)
+        {
+            throw "Invalid Arguments!";
+        }
+        vector<vector<double>> mat(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
+        this->matrix = mat;
+        this->rows = static_cast<size_t>(rows);
+        this->columns = static_cast<size_t>(columns);
+    }
+
+    // Copy Constructor
+    Matrix::Matrix(const Matrix &mat)
+    {
+        this->matrix = mat.matrix;
+        this->rows = mat.rows;
+        this->columns = mat.columns;
+    }
+
+    // Destructor
+    Matrix::~Matrix()
+    {
+        for (size_t i = 0; i < this->rows; i++)
+        {
+            this->matrix.at(i).clear();
+        }
+        this->matrix.clear();
+    }
+
     /*  
         Function to overload output (<<) operator, the function recieves a matrix
         and builds a string from it, where each block encapsuled by [] is a row in
@@ -132,80 +207,6 @@ namespace zich
         return res;
     }
 
-    Matrix::Matrix(vector<double> mat, int rows, int columns)
-    {
-        if (rows <= 0 || columns <= 0)
-        {
-            throw "Invalid Arguments!";
-        }
-        if (mat.size() != rows * columns)
-        {
-            throw "Invalid Arguments!";
-        }
-
-        vector<vector<double>> matr(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
-        for (size_t i = 0; i < rows * columns; i++)
-        {
-            // division and modulo manipulation to avoid doing nested loops
-            matr.at(i / static_cast<size_t>(columns)).at(i % static_cast<size_t>(columns)) = mat.at(i);
-
-            this->matrix = matr;
-            this->rows = static_cast<size_t>(rows);
-            this->columns = static_cast<size_t>(columns);
-        }
-    }
-
-    Matrix::Matrix(vector<vector<double>> mat, int rows, int columns)
-    {
-
-        if (rows <= 0 || columns <= 0)
-        {
-            throw "Invalid Arguments!";
-        }
-
-        vector<vector<double>> matr(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
-        for (size_t i = 0; i < rows; i++)
-        {
-            for (size_t j = 0; j < columns; j++)
-            {
-                matr.at(i).at(j) = mat.at(i).at(j);
-            }
-        }
-
-        this->matrix = matr;
-        this->rows = static_cast<size_t>(rows);
-        this->columns = static_cast<size_t>(columns);
-    }
-
-    Matrix::Matrix(int rows, int columns)
-    {
-        if (rows <= 0 || columns <= 0)
-        {
-            throw "Invalid Arguments!";
-        }
-        vector<vector<double>> mat(static_cast<size_t>(rows), vector<double>(static_cast<size_t>(columns), 0));
-        this->matrix = mat;
-        this->rows = static_cast<size_t>(rows);
-        this->columns = static_cast<size_t>(columns);
-    }
-
-    // Copy Constructor
-    Matrix::Matrix(const Matrix &mat)
-    {
-        this->matrix = mat.matrix;
-        this->rows = mat.rows;
-        this->columns = mat.columns;
-    }
-
-    // Destructor
-    Matrix::~Matrix()
-    {
-        for (size_t i = 0; i < this->rows; i++)
-        {
-            this->matrix.at(i).clear();
-        }
-        this->matrix.clear();
-    }
 
     Matrix Matrix::operator+(const Matrix &mat) const // Adding two matrices
     {
