@@ -65,5 +65,6 @@ namespace zich
         // Helpers
         bool dim_check(const Matrix &mat) const;
         double mat_sum(const Matrix &mat) const;
+        size_t getRows();
     };
 };

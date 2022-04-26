@@ -1,84 +1,136 @@
-#include <iostream>
-#include <vector>
 #include "Matrix.hpp"
+#include <iostream>
+#include <string>
+
+using std::cin;
+using std::cout;
+using std::endl;
+using std::exception;
+using std::string;
 
 using namespace zich;
-using std::cout;
-using std::cin;
-using std::endl;
-using std::vector;
 
 int main()
 {
-    cout<< "please input ur first matrix via format uwu\n'[num1 ... num_col], [num1 ... num_col], ..... [num1 ... num_col]'" << endl;
-    Matrix mat1(5,5);
-    cin >> mat1;
-    
-    Matrix mat2(5,5);
-    cout << "please input the second matrix via the same format above uwu \n";
-    cin >> mat2;
 
-    vector<double> mat = {1};
-    Matrix mat3({1}, 1, 1); // default till will be setted as something
-    std::cout << "mat3 default is:\n" << mat3 << std::endl<< std::endl;;
+    Matrix mat_1;
+    Matrix mat_2;
+    char input;
+    double scalar;
 
-    char flag = '\0';
-    std::cout << "to sum mat2 into mat1 press a\nto sum mat2 and mat1 to mat3 press b\nsame with sub for c, d\nsame with mul for e, f\nto check mat1==mat2 press g\nto check mat1 < mat2 press h\nto check mat1 <= mat2 press i\nto print mat1 endl, mat2 endl, mat3 endl press j\nanything else to exit\n" << std::endl;
-    for (;;)
+    //  Creating two matrices to work on them
+    while (mat_1.getRows() == 0 || mat_2.getRows() == 0)
     {
-        std::cin >> flag;
-        std::cout << std::endl;
-        if (flag == 'a')
+        cout << "Enter M for matrix input or R for random 3x3 matrix or I for I_3" << endl;
+        cin >> input;
+        if (input == 'M')
         {
-            mat3 = mat1+mat2;
-            std::cout << "mat1+mat2 = mat3: " << std::endl << mat3 << std::endl<< std::endl;
+            cout << "Enter the first matrix" << endl;
+            try
+            {
+                cin >> mat_1;
+            }
+            catch (exception &e)
+            {
+                cin >> mat_1;
+            }
         }
-        else if (flag == 'b')
+        else if (input == 'R')
         {
-            mat1+=mat2;
-            std::cout << "mat1+=mat2 -> mat1:\n"<< mat1 << std::endl<< std::endl;
+            for (int i = 0; i < 9; i++)
+            {
+                mat_1 = Matrix({(double)(rand() % 10), (double)(rand() % 10), (double)(rand() % 10),
+                                (double)(rand() % 10), (double)(rand() % 10), (double)(rand() % 10),
+                                (double)(rand() % 10), (double)(rand() % 10), (double)(rand() % 10)},
+                               3, 3);
+            }
         }
-        else if (flag == 'c')
+        else if (input == 'I')
         {
-            mat3 = mat1-mat2;
-            std::cout << "mat1-mat2 = mat3: " << std::endl << mat3 << std::endl<< std::endl;
+            mat_1 = Matrix({1, 0, 0, 0, 1, 0, 0, 0, 1}, 3, 3);
         }
-        else if (flag == 'd')
+        cout << "Enter M for matrix input or R for random 3x3 matrix or I for I_3" << endl;
+        cin >> input;
+        if (input == 'M')
         {
-            mat1-=mat2;
-            std::cout << "mat1-=mat2 -> mat1:\n"<< mat1 << std::endl<< std::endl;
+            cout << "Enter the second matrix" << endl;
+            try
+            {
+                cin >> mat_2;
+            }
+            catch (exception &e)
+            {
+                cin >> mat_2;
+            }
         }
-        else if (flag == 'e')
+        else if (input == 'R')
         {
-            mat3 = mat1*mat2;
-            std::cout << "mat1*mat2 = mat3: " << std::endl << mat3 << std::endl<< std::endl;
+            for (int i = 0; i < 9; i++)
+            {
+                mat_2 = Matrix({(double)(rand() % 10), (double)(rand() % 10), (double)(rand() % 10),
+                                (double)(rand() % 10), (double)(rand() % 10), (double)(rand() % 10),
+                                (double)(rand() % 10), (double)(rand() % 10), (double)(rand() % 10)},
+                               3, 3);
+            }
         }
-        else if (flag == 'f')
+        else if (input == 'I')
         {
-            mat1*=mat2;
-            std::cout << "mat1*=mat2 -> mat1:\n"<< mat1 << std::endl<< std::endl;
-        }
-        else if (flag == 'g')
-        {
-            std::cout << "mat1 == mat2: " << (mat1 == mat2) << std::endl<< std::endl;
-        }
-        else if (flag == 'h')
-        {
-            std::cout << "mat1 < mat2: " << (mat1 < mat2) << std::endl<< std::endl;
-        }
-        else if (flag == 'i')
-        {
-            std::cout << "mat1 <= mat2: " << (mat1 <= mat2) << std::endl<< std::endl;
-        }
-        else if (flag == 'j')
-        {
-            std::cout << mat1 << std::endl<< std::endl << mat2 << std::endl<< std::endl << mat3 << std::endl<< std::endl;       
-        }
-        else
-        {
-            break;
+            mat_2 = Matrix({1, 0, 0, 0, 1, 0, 0, 0, 1}, 3, 3);
         }
     }
-    std::cout<< "dank ya uwu\ncya next time <3\n";
-    return 1;
+    // Few matrix operators for the interactive presentation
+    cout << "Matrix A:\n"
+         << mat_1 << endl;
+    cout << "\n";
+    cout << "Matrix B:\n"
+         << mat_2 << endl;
+    cout << "\n";
+
+    cout << "Enter a scalar to multiply A by" << endl;
+    cin >> scalar;
+    cout << scalar << "*mat_1:\n"
+         << mat_1 * scalar << endl;
+    cout << "\n";
+
+    cout << "Multiplying B from the other side.." << endl;
+    cout << "mat_2"
+         << "*"
+         << ":\n"
+         << scalar * mat_2 << endl;
+    cout << "\n";
+
+    cout << "mat_1*mat_2:\n"
+         << mat_1 * mat_2 << endl;
+    cout << "\n";
+
+    cout << "mat_1+mat_2:\n"
+         << mat_1 + mat_2 << endl;
+    cout << "\n";
+
+    cout << "mat_1-mat_2:\n"
+         << mat_1 - mat_2 << endl;
+    cout << "\n";
+
+    cout << "mat_1==mat_2\n"
+         << (mat_1 == mat_2) << endl;
+    cout << "\n";
+
+    cout << "mat_1!=mat_2\n"
+         << (mat_1 != mat_2) << endl;
+    cout << "\n";
+
+    cout << "mat_1<=mat_2\n"
+         << (mat_1 <= mat_2) << endl;
+    cout << "\n";
+
+    cout << "mat_1>=mat_2\n"
+         << (mat_1 >= mat_2) << endl;
+    cout << "\n";
+
+    cout << "mat_1<mat_2\n"
+         << (mat_1 < mat_2) << endl;
+    cout << "\n";
+
+    cout << "mat_1>mat_2\n"
+         << (mat_1 > mat_2) << endl;
 }

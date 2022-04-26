@@ -8,7 +8,7 @@ namespace zich
 {
     bool flag = true;
 
-        Matrix::Matrix(vector<double> mat, int rows, int columns)
+    Matrix::Matrix(vector<double> mat, int rows, int columns)
     {
         if (rows <= 0 || columns <= 0)
         {
@@ -73,6 +73,13 @@ namespace zich
         this->columns = mat.columns;
     }
 
+    // Empty Constructor
+    Matrix::Matrix()
+    {
+        this->rows = 0;
+        this->columns = 0;
+    }
+
     // Destructor
     Matrix::~Matrix()
     {
@@ -83,7 +90,7 @@ namespace zich
         this->matrix.clear();
     }
 
-    /*  
+    /*
         Function to overload output (<<) operator, the function recieves a matrix
         and builds a string from it, where each block encapsuled by [] is a row in
         the matrix
@@ -135,7 +142,7 @@ namespace zich
         tokens.push_back(input.substr(0, input.size()));
 
         size_t row = tokens.size(); // this is the number of rows the matrix has
-        if (row == 0) // we will be dividing by this later, so need to make sure it's not 0
+        if (row == 0)               // we will be dividing by this later, so need to make sure it's not 0
         {
             throw "Invalid Input!";
         }
@@ -160,7 +167,7 @@ namespace zich
 
         // number of columns is total matrix size divided by rows (we made sure rows != 0)
         size_t col = (vect.size()) / row;
-        
+
         mat = Matrix(vect, row, col);
         return in;
     }
@@ -206,7 +213,6 @@ namespace zich
         }
         return res;
     }
-
 
     Matrix Matrix::operator+(const Matrix &mat) const // Adding two matrices
     {
@@ -445,5 +451,10 @@ namespace zich
             }
         }
         return *this;
+    }
+
+    size_t Matrix::getRows()
+    {
+        return this->rows;
     }
 }
